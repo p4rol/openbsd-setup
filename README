@@ -3,7 +3,7 @@ basic NATing for you:
 
 
 # Step 1: Create /etc/dhcpd.conf
-# Step 2: Craete /etc/pf.conf
+# Step 2: Create /etc/pf.conf
 # Step 3: Create /etc/hostname.ure0
 # Step 4: Create /etc/hostname.em0
 # Step 5: echo  'net.inet.ip.forwarding=1' >> /etc/sysctl.conf

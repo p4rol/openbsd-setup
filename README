@@ -13,10 +13,16 @@ basic NATing for you:
 # Step 9: 'reboot'   and test
 
 
+BONUS POINTS:
+newfs sd0c &&  echo “bdcf2d5c26944dcb.c /cache ffs rw,nodev,nosuid 1 2” >> /etc/fstab && mkdir /cache     # Format a drive, mount it to /cache on boot up OpenBSD
 
 
 
 
+
+
+
+MORE DETAIL FROM THE MAIN STEPS:
 
 Setup External Interface
 root@puff ~# cat /etc/hostname.ure0 

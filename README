@@ -17,7 +17,39 @@ BONUS POINTS:
 newfs sd0c &&  echo “bdcf2d5c26944dcb.c /cache ffs rw,nodev,nosuid 1 2” >> /etc/fstab && mkdir /cache     # Format a drive, mount it to /cache on boot up OpenBSD
 
 
+Setting up unbound:
 
+Add the resolves IP address:
+echo "nameserver 192.1668.90.1" >> /etc/resolv.conf 
+
+
+Configure the unbound server:
+/var/unbound/etc/unbound.conf
+server:
+        interface: 192.168.90.1
+        interface: 127.0.0.1
+        access-control: 192.168.90.0/24 allow
+        do-not-query-localhost: no
+        hide-identity: yes
+        hide-version: yes
+        prefetch: yes
+        # logfile: /cache/dns.log
+        verbosity: 3
+
+forward-zone:
+        name: "."
+        forward-addr: 8.8.8.8  # IP of the preferred upstream resolver
+
+
+chown _unbound:unbound /var/unbound/etc/unbound.conf
+
+
+rcctl enable unbound
+rcctl start unbound
+
+If something is going wrong, check the config file
+unbound-checkconf /var/unbound/etc/unbound.conf 
+unbound-checkconf: no errors in /var/unbound/etc/unbound.conf
 
 
 

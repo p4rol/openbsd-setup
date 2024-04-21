@@ -10,6 +10,8 @@ basic NATing for you:
 # Step 6: rcctl set dhcpd flags em0
 # Step 7: rcctl enable dhcpd
 # Step 8: pfctl -e  
+# Step 9: rcctl stop resolvd && rcctl disable resolvd            # Stop resolvd from updating /etc/resolv.conf
+# Step 10: echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 # Step 9: 'reboot'   and test
 
 

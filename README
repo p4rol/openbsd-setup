@@ -43,8 +43,10 @@ server:
         hide-identity: yes
         hide-version: yes
         prefetch: yes
+
+        # Uncomment these two lines and you'll log every DNS request made
         # logfile: /cache/dns.log
-        verbosity: 3
+        # verbosity: 3
 
 forward-zone:
         name: "."

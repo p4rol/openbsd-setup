@@ -1,18 +1,26 @@
-High level overview of the steps you need to setup a simple OpenBSD firewall that does some
+HIGH LEVEL OVERVIEW...
+
+...of the steps you need to setup a simple OpenBSD firewall that does some
 basic NATing for you:
 
 
-# Step 1: Create /etc/dhcpd.conf
-# Step 2: Create /etc/pf.conf
-# Step 3: Create /etc/hostname.ure0
-# Step 4: Create /etc/hostname.em0
-# Step 5: echo  'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
-# Step 6: rcctl set dhcpd flags em0
-# Step 7: rcctl enable dhcpd
-# Step 8: pfctl -e  
-# Step 9: rcctl stop resolvd && rcctl disable resolvd            # Stop resolvd from updating /etc/resolv.conf
-# Step 10: echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-# Step 9: 'reboot'   and test
+- Create /etc/dhcpd.conf
+- Create /etc/pf.conf
+- Create /etc/hostname.ure0
+- Create /etc/hostname.em0
+- Create /etc/hostanme.vlan10
+- Create /etc/hostanme.pppoe0
+- echo  'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
+- rcctl set dhcpd flags em0
+- rcctl enable dhcpd
+- pfctl -e  
+- rcctl stop resolvd && rcctl disable resolvd            # Stop resolvd from updating /etc/resolv.conf
+- echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+- 'reboot'   and test
+
+
+
+
 
 
 BONUS POINTS:

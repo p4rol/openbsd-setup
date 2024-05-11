@@ -1,0 +1,3 @@
+mtu 1500
+vnetid 10 parent ure0
+up

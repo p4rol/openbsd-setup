@@ -30,7 +30,7 @@ newfs sd0c &&  echo “bdcf2d5c26944dcb.c /cache ffs rw,nodev,nosuid 1 2” >> /
 Setting up unbound:
 
 Add the resolves IP address:
-echo "nameserver 192.1668.90.1" >> /etc/resolv.conf 
+echo "nameserver 192.168.90.1" >> /etc/resolv.conf 
 
 
 Configure the unbound server:

@@ -4,6 +4,9 @@ inet 0.0.0.0 255.255.255.255 NONE mtu 1492 \
 dest 0.0.0.1
 !/sbin/route add default -ifp pppoe0 0.0.0.1
 
+# DNS servers to be used on this PPPoE connection.
+# If you have resolvd enabled, it will add these addresses to your /etc/resolv.conf
+!/sbin/route nameserver pppoe0 8.8.8.8 1.1.1.1 8.8.4.4
 
 
 # There are two kinds of authentication, "pap" and "chap"

@@ -14,7 +14,7 @@ basic NATing for you:
 - rcctl set dhcpd flags em0
 - rcctl enable dhcpd
 - pfctl -e  
-- rcctl stop resolvd && rcctl disable resolvd            # Stop resolvd from updating /etc/resolv.conf
+- rcctl stop resolvd && rcctl disable resolvd            # Only do this if you don't want /etc/resolv.conf to be updated automatically as you switch networks
 - echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 - 'reboot'   and test
 

@@ -125,8 +125,15 @@ block all
 pass out quick inet
 pass in on { $externalNIC $internalNIC } inet
 # pass in on egress inet proto tcp from any to (egress) port { 80 443 } rdr-to 192.168.1.2
+
+
+
+
 Enable the Firewall service
 root@puff ~# rcctl enable pf
+
+
+
 Configure DHCPD settings
 root@puff ~# cat /etc/dhcpd.conf 
 # HOME
@@ -162,7 +169,6 @@ subnet 192.168.90.0 netmask 255.255.255.0 {
                 option host-name "m700-3";
         }
 }
-
 
 
 

@@ -15,7 +15,7 @@
 #
 # You can run it from cron every minute like this:
 #
-# */10 * * * * /path/ping_watchdog.sh -c 3 -i 3 -t 5
+# */10 * * * * /root/dev/ping_watchdog.sh -c 3 -i 3 -t 5
 #
 # This script was written to run on OpenBSD, last tested on 7.5
 

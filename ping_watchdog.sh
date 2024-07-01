@@ -1,12 +1,12 @@
 #!/usr/local/bin/bash
 #
 # This scipt will use the ping commmand to determine that there is an external 
-# INTERNET connection. If there is no internet connection established, it will 
-# reboot the host and attempt to restablish the connection. 
+# internet connection. If there is no internet connection established, it will 
+# reboot the host 
 #
 # Why reboot the host ? 
-# - Sure, you don't need to reboot a host to restablisha PPP session etc
-# - But sometimes network drives are not reliable, and simply unloading and 
+# - Sure, you don't need to reboot a host to restablish a PPP session etc
+# - But sometimes network drivers are not reliable, and simply unloading and 
 # reloading the driver doesn't work 
 # - So yes, this method is a little aggressive, but it works
 #
@@ -21,7 +21,7 @@
 
 # Define defaults
 PING_COUNT=5
-PING_INTERVAL=10  # Seconds
+PING_INTERVAL=10  # In seconds
 TIMEOUT_MINUTES=5
 
 # Define the IP addresses of the DNS servers to ping

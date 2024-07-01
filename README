@@ -1,13 +1,12 @@
 HIGH LEVEL OVERVIEW...
 
-...of the steps you need to setup a simple OpenBSD firewall that does some
-basic NATing for you:
+...of the steps you need to setup a simple OpenBSD firewall that does some basic NATing for you, where the external interface uses PPPoE
 
 
 # Configure the EXTERNAL interface
-- Create /etc/hostname.ure0
-- Create /etc/hostanme.vlan10
-- Create /etc/hostanme.pppoe0
+- Create /etc/hostname.ure0           <-- Physical interface
+- Create /etc/hostanme.vlan10         <-- VLAN overlay interface (on top of the physical interface)
+- Create /etc/hostanme.pppoe0         <-- PPP interface that represents the PPP session
 
 
 # Configure the INTERNAL interface

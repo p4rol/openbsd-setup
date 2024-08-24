@@ -1,6 +1,4 @@
-HIGH LEVEL OVERVIEW...
-
-...of the steps you need to setup a simple OpenBSD firewall that does some basic NATing for you, where the external interface uses PPPoE
+HIGH LEVEL OVERVIEW of the steps you need to setup a simple OpenBSD firewall that does some basic NATing for you, where the external interface uses PPPoE
 
 
 # Configure the EXTERNAL interfaces
@@ -8,10 +6,8 @@ HIGH LEVEL OVERVIEW...
 - Create /etc/hostanme.vlan10         <-- VLAN overlay interface (on top of the physical interface)
 - Create /etc/hostanme.pppoe0         <-- PPP interface that represents the PPP session
 
-
 # Configure the INTERNAL interface
 - Create /etc/hostname.em0
-
 
 # Configure the DHCP server
 - Create /etc/dhcpd.conf
@@ -19,12 +15,10 @@ HIGH LEVEL OVERVIEW...
 - rcctl enable dhcpd
 - rcctl start dhcpd
 
-
 # Configure the PF firewall
 - echo  'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
 - Create /etc/pf.conf
 - pfctl -e  
-
 
 # Configure the DNS situation
 - rcctl stop resolvd && rcctl disable resolvd            # Only do this if you don't want /etc/resolv.conf to be updated automatically as you switch networks
@@ -34,16 +28,39 @@ HIGH LEVEL OVERVIEW...
 - rcctl start unbound
 - Create /var/unbound/etc/unbound.conf
 
-
 # Apply all the network settings for the hostname.if files you created:
 - sh /etc/netstart ure0 vlan10 pppoe0 em0
-
 
 # FINAL STEP
 - 'reboot'   and test
 
 
 
+
+Steps in cli commands
+---------------------
+pkg_add wget unzip 
+wget https://github.com/p4rol/openbsd-setup/archive/refs/heads/main.zip
+unzip -d main.zip
+cd openbsd-setup-mainw
+cp hostname.axen0 /etc/
+cp hostanme.vlan10 /etc/
+cp hostanme.pppoe0 /etc/
+cp hostname.em0 /etc/
+cp dhcpd.conf /etc/
+cp pf.conf /etc/
+cp resolv.conf /etc/
+cp hosts /etc/
+cp ping_watchdog.sh /etc/
+cp ntpd.conf /etc/
+cp unbound.conf /var/unbound/etc/
+echo 'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
+sed -i 's/^#Port 22$/Port 22223/' /etc/ssh/sshd_config
+rcctl enable dhcpd
+rcctl enable unbound
+rcctl enable ntpd
+rcctl disable resolvd
+(crontab -l; echo "*/10 * * * * /root/ping_watchdog.sh -c 3 -i 3 -t 5") | crontab -
 
 
 
@@ -94,82 +111,9 @@ unbound-checkconf: no errors in /var/unbound/etc/unbound.conf
 
 
 
-MORE DETAIL FROM THE MAIN STEPS:
-
-Setup External Interface
-root@puff ~# cat /etc/hostname.ure0 
-dhcp
-Setup Internal Interface
-root@puff ~# cat /etc/hostname.em0
-inet 192.168.90.1 255.255.255.0 NONE
-
-
-Setup Firewall + NAT
-root@puff ~# cat /etc/pf.conf
-externalNIC = "ure0"
-internalNIC = "em0"
-table <martians> { 0.0.0.0/8 10.0.0.0/8 127.0.0.0/8 169.254.0.0/16     \
-                   172.16.0.0/12 192.0.0.0/24 192.0.2.0/24 224.0.0.0/3 \
-                   192.168.0.0/16 198.18.0.0/15 198.51.100.0/24        \
-                   203.0.113.0/24 }
-set block-policy drop
-set loginterface egress
-set skip on lo0
-match in all scrub (no-df random-id max-mss 1440)
-match out on egress inet from !(egress:network) to any nat-to (egress:0)
-antispoof quick for { egress $externalNIC $internalNIC }
-block in quick on egress from <martians> to any
-block return out quick on egress from any to <martians>
-block all
-pass out quick inet
-pass in on { $externalNIC $internalNIC } inet
-# pass in on egress inet proto tcp from any to (egress) port { 80 443 } rdr-to 192.168.1.2
-
 
 
 
 Enable the Firewall service
 root@puff ~# rcctl enable pf
 
-
-
-Configure DHCPD settings
-root@puff ~# cat /etc/dhcpd.conf 
-# HOME
-subnet 192.168.90.0 netmask 255.255.255.0 {
-        option domain-name-servers 8.8.8.8;
-        option routers 192.168.90.1;
-        range 192.168.90.3 192.168.90.50;
-        default-lease-time 600;
-        max-lease-time 6000;
-        host raspperypi {
-                hardware ethernet d8:3a:dd:69:ec:06;
-                fixed-address 192.168.90.2;
-                option host-name "pi";
-        }
-        host work-mac {
-                hardware ethernet 08:BF:B8:BF:D5:F9;
-                fixed-address 192.168.90.3;
-                option host-name "work-mac";
-        }
-        host m700-1 {
-                hardware ethernet 00:23:24:b2:d6:b1;
-                fixed-address 192.168.90.4;
-                option host-name "m700-1";
-        }
-        host m700-2 {
-                hardware ethernet 00:23:24:B3:89:FC;
-                fixed-address 192.168.90.5;
-                option host-name "m700-2";
-        }
-        host m700-3 {
-                hardware ethernet 00:23:24:B2:E1:F0;
-                fixed-address 192.168.90.6;
-                option host-name "m700-3";
-        }
-}
-
-
-
-Enable DHCPD service
-root@puff ~# rcctl enable dhcpd 

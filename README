@@ -38,8 +38,8 @@ A simple OpenBSD firewall that does some basic NATing for you, where the externa
 
 
 
-**Steps in cli commands
-```
+Steps as cli commands
+
 pkg_add wget unzip 
 wget https://github.com/p4rol/openbsd-setup/archive/refs/heads/main.zip
 unzip -d main.zip
@@ -62,7 +62,7 @@ rcctl enable unbound
 rcctl enable ntpd
 rcctl disable resolvd
 (crontab -l; echo "*/10 * * * * /root/ping_watchdog.sh -c 3 -i 3 -t 5") | crontab -
-```
+
 
 
 

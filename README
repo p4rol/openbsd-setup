@@ -1,4 +1,5 @@
-HIGH LEVEL OVERVIEW of the steps you need to setup a simple OpenBSD firewall that does some basic NATing for you, where the external interface uses PPPoE
+# HIGH LEVEL OVERVIEW
+A simple OpenBSD firewall that does some basic NATing for you, where the external interface uses PPPoE
 
 
 # Configure the EXTERNAL interfaces
@@ -37,12 +38,12 @@ HIGH LEVEL OVERVIEW of the steps you need to setup a simple OpenBSD firewall tha
 
 
 
-Steps in cli commands
----------------------
+**Steps in cli commands
+```
 pkg_add wget unzip 
 wget https://github.com/p4rol/openbsd-setup/archive/refs/heads/main.zip
 unzip -d main.zip
-cd openbsd-setup-mainw
+cd openbsd-setup-main
 cp hostname.axen0 /etc/
 cp hostanme.vlan10 /etc/
 cp hostanme.pppoe0 /etc/
@@ -61,7 +62,7 @@ rcctl enable unbound
 rcctl enable ntpd
 rcctl disable resolvd
 (crontab -l; echo "*/10 * * * * /root/ping_watchdog.sh -c 3 -i 3 -t 5") | crontab -
-
+```
 
 
 

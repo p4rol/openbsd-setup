@@ -26,7 +26,7 @@ TIMEOUT_MINUTES=5
 
 # Define the IP addresses of the DNS servers to ping
 GOOGLE_DNS="8.8.8.8"
-CLOUDDLARE_DNS="1.1.1.1"
+CLOUDFLARE_DNS="1.1.1.1"
 
 
 # Process arguments (switches)

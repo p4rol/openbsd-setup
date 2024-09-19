@@ -67,8 +67,15 @@ rcctl disable resolvd
 
 
 
-BONUS POINTS:
-newfs sd0c &&  echo “bdcf2d5c26944dcb.c /cache ffs rw,nodev,nosuid 1 2” >> /etc/fstab && mkdir /cache     # Format a drive, mount it to /cache on boot up OpenBSD
+BONUS POINTS for squid cache:
+sysctl hw.disknames                                                           # List the available disks
+newfs sd0c                                                                    # Format the disk you want to use
+echo “bdcf2d5c26944dcb.c /cache ffs rw,nodev,nosuid 1 2” >> /etc/fstab        # Add that disks to your fstab so it's mounted at boot time
+mkdir /cache                                                                  # Make the mount point 
+mount /cache                                                                  # Manually mount the new drive (it should persist over reboot)
+
+
+
 
 
 Setting up unbound:

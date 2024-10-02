@@ -18,6 +18,7 @@
 # */10 * * * * /root/dev/ping_watchdog.sh -c 3 -i 3 -t 5
 #
 # This script was written to run on OpenBSD, last tested on 7.5
+# Warnig messages and the shutdown message will appear in /var/log/messages as per the logger defaults (on OpenBSD at least...)
 
 # Define defaults
 PING_COUNT=5

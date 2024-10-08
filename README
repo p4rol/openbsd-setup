@@ -62,7 +62,7 @@ rcctl enable unbound
 rcctl enable ntpd
 rcctl disable resolvd
 (crontab -l; echo "*/10 * * * * /root/ping_watchdog.sh -c 3 -i 3 -t 5") | crontab -
-
+# Then manually update the username and password for the pppoe connection to the ISP
 
 
 

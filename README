@@ -30,7 +30,7 @@ A simple OpenBSD firewall that does some basic NATing for you, where the externa
 - Create /var/unbound/etc/unbound.conf
 
 # Apply all the network settings for the hostname.if files you created:
-- sh /etc/netstart ure0 vlan10 pppoe0 em0
+- sh /etc/netstart axen0 vlan10 pppoe0 em0
 
 # FINAL STEP
 - 'reboot'   and test

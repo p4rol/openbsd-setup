@@ -10,6 +10,34 @@ check_success() {
     fi
 }
 
+# Function to check if username and password are set in /etc/hostname.pppoe0
+check_pppoe_credentials() {
+    # Extract authname and authkey values from the file
+    authname=$(grep "authname" /etc/hostname.pppoe0 | awk '{print $2}')
+    authkey=$(grep "authkey" /etc/hostname.pppoe0 | awk '{print $2}')
+    
+    # Prompt the user to input credentials if either authname or authkey is not set
+    if [ -z "$authname" ] || [ "$authname" = "''" ]; then
+        echo "PPPoE username (authname) is not set in /etc/hostname.pppoe0."
+        echo -n "Please enter your PPPoE username: "
+        read username
+        # Update /etc/hostname.pppoe0 with the provided username
+        sed -i "s/authname ''/authname '$username'/" /etc/hostname.pppoe0
+        check_success "Updated PPPoE username in /etc/hostname.pppoe0"
+    fi
+    
+    if [ -z "$authkey" ] || [ "$authkey" = "''" ]; then
+        echo "PPPoE password (authkey) is not set in /etc/hostname.pppoe0."
+        echo -n "Please enter your PPPoE password: "
+        read password
+        # Update /etc/hostname.pppoe0 with the provided password
+        sed -i "s/authkey ''/authkey '$password'/" /etc/hostname.pppoe0
+        check_success "Updated PPPoE password in /etc/hostname.pppoe0"
+    fi
+
+    echo "Success: PPPoE username and password are set in /etc/hostname.pppoe0"
+}
+
 # Install necessary packages
 pkg_add wget unzip
 check_success "pkg_add wget unzip"
@@ -80,6 +108,9 @@ check_success "rcctl enable ntpd"
 
 rcctl disable resolvd
 check_success "rcctl disable resolvd"
+
+# Check if PPPoE username and password are set, and prompt the user if necessary
+check_pppoe_credentials
 
 # Add a cron job for ping_watchdog.sh
 (crontab -l; echo "*/10 * * * * /root/ping_watchdog.sh -c 3 -i 3 -t 5") | crontab -

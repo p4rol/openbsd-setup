@@ -80,7 +80,7 @@ cp hosts /etc/
 check_success "cp hosts to /etc/"
 
 cp ping_watchdog.sh /etc/
-check_success "cp ping_watchdog.sh to /etc/"
+check_success "cp ping_watchdog.sh to /root/ping_watchdog.sh"
 
 cp ntpd.conf /etc/
 check_success "cp ntpd.conf to /etc/"

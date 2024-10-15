@@ -79,7 +79,7 @@ check_success "cp resolv.conf to /etc/"
 cp hosts /etc/
 check_success "cp hosts to /etc/"
 
-cp ping_watchdog.sh /etc/
+cp ping_watchdog.sh /root/ping_watchdog.sh
 check_success "cp ping_watchdog.sh to /root/ping_watchdog.sh"
 
 cp ntpd.conf /etc/

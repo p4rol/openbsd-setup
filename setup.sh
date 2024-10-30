@@ -88,6 +88,9 @@ check_success "cp ntpd.conf to /etc/"
 cp unbound.conf /var/unbound/etc/
 check_success "cp unbound.conf to /var/unbound/etc/"
 
+cp sshd_config /etc/ssh/
+check_seccess "cp sshd_conf to /etc/ssh/"
+
 # Append IP forwarding setting to sysctl.conf
 echo 'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
 check_success "IP forwarding setting appended to /etc/sysctl.conf"

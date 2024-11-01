@@ -1,0 +1,176 @@
+---
+- name: Setup OpenBSD environment
+  hosts: localhost
+  become: true
+  gather_facts: false
+  collections:
+    - openbsd_pkg
+    - community.general
+
+  tasks:
+
+    - name: Install necessary packages
+      openbsd_pkg:
+        name:
+          - wget
+          - unzip
+        state: present
+
+    - name: Download the openbsd-setup archive
+      get_url:
+        url: https://github.com/p4rol/openbsd-setup/archive/refs/heads/main.zip
+        dest: /tmp/main.zip
+
+    - name: Unzip the downloaded file
+      unarchive:
+        src: /tmp/main.zip
+        dest: /tmp/
+        remote_src: yes
+
+    - name: Copy configuration files to /etc/
+      copy:
+        src: "/tmp/openbsd-setup-main/{{ item }}"
+        dest: "/etc/{{ item }}"
+        owner: root
+        group: wheel
+        mode: '0644'
+      loop:
+        - hostname.axen0
+        - hostname.vlan10
+        - hostname.pppoe0
+        - hostname.em0
+        - dhcpd.conf
+        - pf.conf
+        - resolv.conf
+        - hosts
+        - ntpd.conf
+
+    - name: Copy ping_watchdog.sh to /root/
+      copy:
+        src: /tmp/openbsd-setup-main/ping_watchdog.sh
+        dest: /root/ping_watchdog.sh
+        owner: root
+        group: wheel
+        mode: '0755'
+
+    - name: Copy unbound.conf to /var/unbound/etc/
+      copy:
+        src: /tmp/openbsd-setup-main/unbound.conf
+        dest: /var/unbound/etc/unbound.conf
+        owner: root
+        group: wheel
+        mode: '0644'
+
+    - name: Copy sshd_config to /etc/ssh/
+      copy:
+        src: /tmp/openbsd-setup-main/sshd_config
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: wheel
+        mode: '0644'
+
+    - name: Enable IP forwarding
+      lineinfile:
+        path: /etc/sysctl.conf
+        regexp: '^net\.inet\.ip\.forwarding='
+        line: 'net.inet.ip.forwarding=1'
+        state: present
+
+    - name: Change SSH port
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?Port\s+\d+'
+        line: 'Port 22223'
+        state: present
+      notify: Restart SSH
+
+    - name: Enable and disable services
+      block:
+        - name: Enable and start dhcpd
+          community.general.rcctl:
+            name: dhcpd
+            enabled: yes
+            state: started
+
+        - name: Enable and start unbound
+          community.general.rcctl:
+            name: unbound
+            enabled: yes
+            state: started
+
+        - name: Enable and start ntpd
+          community.general.rcctl:
+            name: ntpd
+            enabled: yes
+            state: started
+
+        - name: Disable and stop resolvd
+          community.general.rcctl:
+            name: resolvd
+            enabled: no
+            state: stopped
+
+    - name: Read /etc/hostname.pppoe0
+      slurp:
+        src: /etc/hostname.pppoe0
+      register: pppoe0_content
+
+    - name: Check if PPPoE username is set
+      set_fact:
+        authname_set: "{{ 'authname' in pppoe0_text and pppoe0_text.find('authname') != -1 and 'authname \'\'' not in pppoe0_text }}"
+      vars:
+        pppoe0_text: "{{ pppoe0_content.content | b64decode }}"
+
+    - name: Prompt for PPPoE username if not set
+      vars_prompt:
+        - name: pppoe_username
+          prompt: "Please enter your PPPoE username"
+          private: no
+      when: not authname_set
+
+    - name: Set PPPoE username in /etc/hostname.pppoe0
+      lineinfile:
+        path: /etc/hostname.pppoe0
+        regexp: '^authname\s+.*'
+        line: "authname '{{ pppoe_username }}'"
+        state: present
+      when: not authname_set
+      notify: Restart PPPoE
+
+    - name: Check if PPPoE password is set
+      set_fact:
+        authkey_set: "{{ 'authkey' in pppoe0_text and pppoe0_text.find('authkey') != -1 and 'authkey \'\'' not in pppoe0_text }}"
+      vars:
+        pppoe0_text: "{{ pppoe0_content.content | b64decode }}"
+
+    - name: Prompt for PPPoE password if not set
+      vars_prompt:
+        - name: pppoe_password
+          prompt: "Please enter your PPPoE password"
+          private: yes
+      when: not authkey_set
+
+    - name: Set PPPoE password in /etc/hostname.pppoe0
+      lineinfile:
+        path: /etc/hostname.pppoe0
+        regexp: '^authkey\s+.*'
+        line: "authkey '{{ pppoe_password }}'"
+        state: present
+      when: not authkey_set
+      notify: Restart PPPoE
+
+    - name: Add cron job for ping_watchdog.sh
+      cron:
+        name: "ping_watchdog"
+        minute: "*/10"
+        job: "/root/ping_watchdog.sh -c 3 -i 3 -t 5"
+
+  handlers:
+    - name: Restart SSH
+      community.general.rcctl:
+        name: sshd
+        state: restarted
+
+    - name: Restart PPPoE
+      command: sh /etc/netstart pppoe0
+      become: true

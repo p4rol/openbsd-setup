@@ -1,6 +1,10 @@
 # /etc/hosts
 127.0.0.1       localhost
 ::1             localhost
+
+
+# All the following were commented out because this box is now using
+# unbound to handle hostname lookups
 #192.168.90.1    firewall
 #192.168.90.2    pi
 #192.168.90.4    s01 

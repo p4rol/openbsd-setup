@@ -10,4 +10,4 @@ dest 0.0.0.1
 
 
 # There are two kinds of authentication, "pap" and "chap"
-# The MTU has been dropped down to 1492
+# The MTU has been dropped down to 1492 from 1500 (8 bits for PPPoE header)

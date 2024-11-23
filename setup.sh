@@ -1,5 +1,12 @@
 #!/bin/ksh
 
+# This script sets up OpenBSD to run as a firewall
+# It also uses a USB attached GPS dongle, VK172 to fetch the time
+
+# The dongle reports as: 
+# umodem0 at uhub0 port 5 configuration 1 interface 0 "u-blox AG - www.u-blox.com u-blox 7 - GPS/GNSS Receiver" rev 1.10/1.00 addr 2
+
+
 # Function to check the success of each command
 check_success() {
     if [ $? -ne 0 ]; then

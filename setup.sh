@@ -46,7 +46,10 @@ check_pppoe_credentials() {
 }
 
 # Function to add line to /etc/ttys
+
 add_ldattach_to_ttys() {
+    # Currently it's setting the serial device cuaU0 because 
+    # no other USB serial devices are plugged in 
     LINE='cuaU0   "/sbin/ldattach nmea"   unknown on softcar'
     FILE=/etc/ttys
     # Check if the line is already in /etc/ttys

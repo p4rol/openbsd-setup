@@ -3,12 +3,14 @@ A simple OpenBSD firewall that does some basic NATing for you, where the externa
 
 
 # Configure the EXTERNAL interfaces
-- Create /etc/hostname.axen0           <-- Physical interface
+- Create /etc/hostname.em0            <-- Physical EXTERNAL interface
 - Create /etc/hostanme.vlan10         <-- VLAN overlay interface (on top of the physical interface)
 - Create /etc/hostanme.pppoe0         <-- PPP interface that represents the PPP session
 
+
 # Configure the INTERNAL interface
-- Create /etc/hostname.em0
+- Create /etc/hostname.igc0
+
 
 # Configure the DHCP server
 - Create /etc/dhcpd.conf

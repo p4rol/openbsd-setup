@@ -1,4 +1,6 @@
-# Tell this interface to use a static IP
-# This needs to match the subnet that you will be using in /etc/dhcpd.conf and /etc/pf.conf
+# External interface on the firewall
 
-inet 192.168.90.1 255.255.255.0 NONE
+up
+
+
+# EOF

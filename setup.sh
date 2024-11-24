@@ -62,26 +62,6 @@ add_ldattach_to_ttys() {
     fi
 }
 
-# Function to add sensor line to /etc/ntpd.conf
-add_sensor_to_ntpd_conf() {
-    LINE='sensor nmea0 weight 5 refid GPS'
-    FILE=/etc/ntpd.conf
-    # Check if the line is already in /etc/ntpd.conf
-    if grep -Fxq "$LINE" "$FILE"; then
-        echo "Line already exists in $FILE"
-    else
-        # Check if '# sensor *' line exists
-        if grep -q '^# sensor \*' "$FILE"; then
-            # Insert the line after '# sensor *'
-            sed -i "/^# sensor \*/a\\
-$LINE" "$FILE"
-            check_success "Added sensor line to $FILE"
-        else
-            echo "Error: Could not find '# sensor *' in $FILE"
-            exit 1
-        fi
-    fi
-}
 
 # Install necessary packages
 pkg_add wget unzip
@@ -129,9 +109,6 @@ check_success "cp ping_watchdog.sh to /root/ping_watchdog.sh"
 
 cp ntpd.conf /etc/
 check_success "cp ntpd.conf to /etc/"
-
-# Call the function to add sensor line to ntpd.conf
-add_sensor_to_ntpd_conf
 
 cp unbound.conf /var/unbound/etc/
 check_success "cp unbound.conf to /var/unbound/etc/"

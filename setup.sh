@@ -100,8 +100,8 @@ cd openbsd-setup-main
 check_success "cd into openbsd-setup-main"
 
 # Copy configuration files to /etc/
-cp hostname.axen0 /etc/
-check_success "cp hostname.axen0 to /etc/"
+cp hostname.igc0 /etc/
+check_success "cp hostname.igc0 to /etc/"
 
 cp hostname.vlan10 /etc/
 check_success "cp hostname.vlan10 to /etc/"
@@ -150,18 +150,30 @@ check_success "IP forwarding setting appended to /etc/sysctl.conf"
 sed -i 's/^#Port 22$/Port 22223/' /etc/ssh/sshd_config
 check_success "SSH port changed to 22223 in /etc/ssh/sshd_config"
 
-# Enable/disable services using rcctl
+# Make sure dhcpd knows to run on igc0
+rcctl set dhcpd flags igc0
+check_success "rcctl set dhcpd flags igc0"
+
+# Enable the dhcpd service 
 rcctl enable dhcpd
 check_success "rcctl enable dhcpd"
 
+# Enable the unbound dns service
 rcctl enable unbound
 check_success "rcctl enable unbound"
 
+# Enable the ntpd service 
 rcctl enable ntpd
 check_success "rcctl enable ntpd"
 
+
+# Disbale the resolvd service, we don't want to use it
 rcctl disable resolvd
 check_success "rcctl disable resolvd"
+
+# No dhcp client should be runnning on this host
+rcctl disable dhcpleased
+check_success "rcctl disable dhcpleased"
 
 # Check if PPPoE username and password are set, and prompt the user if necessary
 check_pppoe_credentials
@@ -171,3 +183,5 @@ check_pppoe_credentials
 check_success "Added cron job for ping_watchdog.sh"
 
 echo "All steps completed successfully."
+
+echo "Reboot and test!"

@@ -1,3 +1,5 @@
+# This file lives in /etc/hostname.igc0
+
 # Tell this interface to use a static IP
 # This needs to match the subnet that you will be using in /etc/dhcpd.conf and /etc/pf.conf
 

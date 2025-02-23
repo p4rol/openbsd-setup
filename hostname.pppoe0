@@ -1,3 +1,5 @@
+# This file lives in /etc/hostname.pppoe0
+
 inet 0.0.0.0 255.255.255.255 NONE mtu 1492 \
         pppoedev vlan10 authproto pap \
         authname '' authkey '' up

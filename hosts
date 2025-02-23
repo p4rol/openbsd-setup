@@ -4,7 +4,7 @@
 
 
 # All the following were commented out because this box is now using
-# unbound to handle hostname lookups
+# unbound to handle hostname lookups (and these hostnames are static)
 #192.168.90.1    firewall
 #192.168.90.2    pi
 #192.168.90.4    s01 

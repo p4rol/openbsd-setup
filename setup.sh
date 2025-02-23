@@ -152,6 +152,14 @@ check_success "rcctl disable resolvd"
 rcctl disable dhcpleased
 check_success "rcctl disable dhcpleased"
 
+# No slaacd (i.e. ipv6 ) is requied, disable it
+rcctl disable slaacd
+check_success "rcctl disable slaacd"
+
+# No MIDI or audio is required, disable it
+rcctl disable sndiod
+check_success "rcctl disable sndiod"
+
 # Check if PPPoE username and password are set, and prompt the user if necessary
 check_pppoe_credentials
 

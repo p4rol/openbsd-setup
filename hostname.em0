@@ -1,4 +1,7 @@
+# This file lives in /etc/hostname.em0
+
 # External interface on the firewall
+
 
 up
 

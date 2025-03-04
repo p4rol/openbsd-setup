@@ -48,20 +48,26 @@ check_pppoe_credentials() {
 # Function to add line to /etc/ttys
 
 add_ldattach_to_ttys() {
-    # Currently it's setting the serial device cuaU0 because 
-    # no other USB serial devices are plugged in 
-    LINE='cuaU0   "/sbin/ldattach nmea"   unknown on softcar'
-    FILE=/etc/ttys
-    # Check if the line is already in /etc/ttys
-    if grep -Fxq "$LINE" "$FILE"; then
-        echo "Line already exists in $FILE"
+    local FILE=/etc/ttys
+    local LINE1='cuaU0   "/sbin/ldattach nmea"   unknown on softcar'
+    local LINE2='cuaU1   "/sbin/ldattach nmea"   unknown on softcar'
+
+    # Process cuaU0
+    if grep -Fxq "$LINE1" "$FILE"; then
+        echo "Line already exists in $FILE: $LINE1"
     else
-        # Append the line to /etc/ttys
-        echo "$LINE" >> "$FILE"
-        check_success "Added ldattach line to $FILE"
+        echo "$LINE1" >> "$FILE"
+        check_success "Added ldattach line to $FILE: $LINE1"
+    fi
+
+    # Process cuaU1
+    if grep -Fxq "$LINE2" "$FILE"; then
+        echo "Line already exists in $FILE: $LINE2"
+    else
+        echo "$LINE2" >> "$FILE"
+        check_success "Added ldattach line to $FILE: $LINE2"
     fi
 }
-
 
 # Install necessary packages
 pkg_add wget unzip

@@ -149,6 +149,13 @@ check_success "rcctl enable unbound"
 rcctl enable ntpd
 check_success "rcctl enable ntpd"
 
+# Enable the apmd service 
+rcctl enable apmd
+check_success "rcctl enable apmd"
+
+# Append apmd settings to the /etc/rc.conf.local configuration file
+echo 'apmd_flags="-L" ' >> /etc/rc.conf.local
+check_success "Append apmd settings to the /etc/rc.conf.local"
 
 # Disbale the resolvd service, we don't want to use it
 rcctl disable resolvd

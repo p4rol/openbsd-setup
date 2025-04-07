@@ -2,11 +2,13 @@
 127.0.0.1       localhost
 ::1             localhost
 
-
-# All the following were commented out because this box is now using
-# unbound to handle hostname lookups (and these hostnames are static)
-#192.168.90.1    firewall
-#192.168.90.2    pi
-#192.168.90.4    s01 
-#192.168.90.5    s02
-#192.168.90.6    s03
+# There are minimal entries in this file as this host is 
+# using unbound for the hostname resolution. The config
+# file for unbound can be found in:
+#
+# /var/unbound/etc/unbound.conf
+#
+#
+#
+# EOF
+# 

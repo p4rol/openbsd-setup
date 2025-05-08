@@ -49,7 +49,7 @@ check_pppoe_credentials() {
 
 add_ldattach_to_ttys() {
     local FILE=/etc/ttys
-    local LINE1='cuaU0   "/sbin/ldattach nmea"   unknown on softcar'
+    local LINE1='cuaU0   "/sbin/ldattach  -h -s 38400 -t !dcd nmea"   unknown on softcar'
     local LINE2='cuaU1   "/sbin/ldattach nmea"   unknown on softcar'
 
     # Process cuaU0

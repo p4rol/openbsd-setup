@@ -20,8 +20,8 @@
 # */10 * * * * /root/dev/ping_watchdog.sh -c 3 -i 3 -t 5
 # Or with reboot enabled:
 # */10 * * * * /root/dev/ping_watchdog.sh -c 3 -i 3 -t 5 -r
-* or every 30 minnutes with:
-* */30 * * * * /root/ping_watchdog.sh
+# or every 30 minnutes with:
+# */30 * * * * /root/ping_watchdog.sh
 #
 # This script was written to run on OpenBSD, last tested on 7.5
 # Warning messages and the shutdown message will appear in /var/log/messages as per the logger defaults (on OpenBSD at least...)

@@ -123,7 +123,7 @@ done
 
 if [ "$internet_up" = true ]; then
   echo "$(date): Internet connection confirmed via $successful_server."
-  # Optional: logger "Watchdog: Internet connection confirmed via $successful_server."
+  logger "Watchdog: Internet connection confirmed via $successful_server."
 else
   echo "$(date): Ping to all configured DNS servers failed."
   logger "Watchdog: Ping to all configured DNS servers failed. Taking action."

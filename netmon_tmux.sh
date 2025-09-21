@@ -39,7 +39,7 @@ tmux select-layout -t "$WIN_ID" tiled
 tmux send-keys -t "$WIN_ID".0 "/root/dev/netmon_combined -c ." C-m
 
 # Top-right: top
-tmux send-keys -t "$WIN_ID".1 "top" C-m
+tmux send-keys -t "$WIN_ID".1 "htop" C-m
 
 # Bottom-left: clear each second then ntpctl -s all
 tmux send-keys -t "$WIN_ID".2 "sh -lc 'while :; do clear; ntpctl -s all; sleep 1; done'" C-m

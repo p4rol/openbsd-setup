@@ -36,7 +36,7 @@ tmux select-layout -t "$WIN_ID" tiled
 # 0: top-left     1: top-right     2: bottom-left     3: bottom-right
 
 # Top-left: /root/dev/netmon_combined -c .
-tmux send-keys -t "$WIN_ID".0 "/root/dev/netmon_combined -c ." C-m
+tmux send-keys -t "$WIN_ID".0 "/root/dev/netmon_combined -c " C-m
 
 # Top-right: top
 tmux send-keys -t "$WIN_ID".1 "top -C -s 1 -g ntp" C-m

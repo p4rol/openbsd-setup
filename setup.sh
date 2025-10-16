@@ -1,7 +1,7 @@
 #!/bin/ksh
 
 # This script sets up OpenBSD to run as a firewall
-# It also uses a USB attached GPS dongle, VK172 to fetch the time
+# It also uses a USB attached GPS dongle, model VK172 works just fine
 
 # The dongle reports as: 
 # umodem0 at uhub0 port 5 configuration 1 interface 0 "u-blox AG - www.u-blox.com u-blox 7 - GPS/GNSS Receiver" rev 1.10/1.00 addr 2
@@ -50,7 +50,10 @@ check_pppoe_credentials() {
 add_ldattach_to_ttys() {
     local FILE=/etc/ttys
     local LINE1='cuaU0   "/sbin/ldattach  -h -s 38400 -t !dcd nmea"   unknown on softcar'
-    local LINE2='cuaU1   "/sbin/ldattach nmea"   unknown on softcar'
+
+    # Only uncomment this if you REALLY want two usb attached GPS devices, it's not adviseable
+    # for accuracy reasons. Better to have a single GPS timing device on your USB bus
+    # local LINE2='cuaU1   "/sbin/ldattach nmea"   unknown on softcar'
 
     # Process cuaU0
     if grep -Fxq "$LINE1" "$FILE"; then

@@ -10,8 +10,6 @@ dest 0.0.0.1
 # If you have resolvd enabled, it will add these addresses to your /etc/resolv.conf
 !/sbin/route nameserver pppoe0 8.8.8.8 1.1.1.1 8.8.4.4
 
-!sleep 5
-!rcctl restart ntpd
 
 # There are two kinds of authentication, "pap" and "chap"
 # The MTU has been dropped down to 1492 from 1500 (8 bits for PPPoE header)

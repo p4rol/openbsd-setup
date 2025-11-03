@@ -1,0 +1,7 @@
+# This file lives in /etc/rc.local
+
+# Workaround to fix an ntpd/network race condition
+(
+    sleep 60
+    /usr/sbin/rcctl restart ntpd
+) &

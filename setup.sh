@@ -125,6 +125,9 @@ check_success "cp unbound.conf to /var/unbound/etc/"
 cp sshd_config /etc/ssh/
 check_success "cp sshd_config to /etc/ssh/"
 
+cp rc.local /etc/rc.local
+check_success "cp rc.local /etc/rc.local"
+
 # Call the function to add ldattach line to /etc/ttys
 add_ldattach_to_ttys
 

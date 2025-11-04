@@ -189,3 +189,6 @@ check_success "Added cron job for ping_watchdog.sh"
 echo "All steps completed successfully."
 
 echo "Reboot and test!"
+
+
+# EOF

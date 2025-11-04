@@ -1,129 +1,16 @@
-# HIGH LEVEL OVERVIEW
-A simple OpenBSD firewall that does some basic NATing for you, where the external interface uses PPPoE
+This is a set of scripts and files to build an OpenBSD machine into a firewall
 
+You run it by running setup.sh
 
-# Configure the EXTERNAL interfaces
-- Create /etc/hostname.em0            <-- Physical EXTERNAL interface
-- Create /etc/hostanme.vlan10         <-- VLAN overlay interface (on top of the physical interface)
-- Create /etc/hostanme.pppoe0         <-- PPP interface that represents the PPP session
+setup.sh will download the rest of the files that it needs to complete the install
 
+I'm tempted to turn it all into a single file with here scripts. Let's see if there is time for that. 
 
-# Configure the INTERNAL interface
-- Create /etc/hostname.igc0
-
-
-# Configure the DHCP server
-- Create /etc/dhcpd.conf
-- rcctl set dhcpd flags em0
-- rcctl enable dhcpd
-- rcctl start dhcpd
-
-# Configure the PF firewall
-- echo  'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
-- Create /etc/pf.conf
-- pfctl -e  
-
-# Configure the DNS situation
-- rcctl stop resolvd && rcctl disable resolvd            # Only do this if you don't want /etc/resolv.conf to be updated automatically as you switch networks
-- echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-- chown _unbound:_unbound /var/unbound/etc/unbound.conf
-- rcctl enable unbound
-- rcctl start unbound
-- Create /var/unbound/etc/unbound.conf
-
-# Apply all the network settings for the hostname.if files you created:
-- sh /etc/netstart axen0 vlan10 pppoe0 em0
-
-# FINAL STEP
-- 'reboot'   and test
-
-
-
-
-Steps as cli commands
-
-pkg_add wget unzip 
-wget https://github.com/p4rol/openbsd-setup/archive/refs/heads/main.zip
-unzip -d main.zip
-cd openbsd-setup-main
-cp hostname.axen0 /etc/
-cp hostname.vlan10 /etc/
-cp hostname.pppoe0 /etc/
-cp hostname.em0 /etc/
-cp dhcpd.conf /etc/
-cp pf.conf /etc/
-cp resolv.conf /etc/
-cp hosts /etc/
-cp ping_watchdog.sh /etc/
-cp ntpd.conf /etc/
-cp unbound.conf /var/unbound/etc/
-echo 'net.inet.ip.forwarding=1' >> /etc/sysctl.conf
-sed -i 's/^#Port 22$/Port 22223/' /etc/ssh/sshd_config
-rcctl enable dhcpd
-rcctl enable unbound
-rcctl enable ntpd
-rcctl disable resolvd
-(crontab -l; echo "*/10 * * * * /root/ping_watchdog.sh -c 3 -i 3 -t 5") | crontab -
-# Then manually update the username and password for the pppoe connection to the ISP in /etc/hostname.pppoe0
-
-
-
-
-BONUS POINTS for squid cache:
-sysctl hw.disknames                                                           # List the available disks
-newfs sd0c                                                                    # Format the disk you want to use
-echo “bdcf2d5c26944dcb.c /cache ffs rw,nodev,nosuid 1 2” >> /etc/fstab        # Add that disks to your fstab so it's mounted at boot time
-mkdir /cache                                                                  # Make the mount point 
-mount /cache                                                                  # Manually mount the new drive (it should persist over reboot)
-
-
-
-
-
-Setting up unbound:
-
-Add the resolves IP address:
-echo "nameserver 192.168.90.1" >> /etc/resolv.conf 
-
-
-Configure the unbound server:
-/var/unbound/etc/unbound.conf
-server:
-        interface: 192.168.90.1
-        interface: 127.0.0.1
-        access-control: 192.168.90.0/24 allow
-        do-not-query-localhost: no
-        hide-identity: yes
-        hide-version: yes
-        prefetch: yes
-
-        # Uncomment these two lines and you'll log every DNS request made
-        # logfile: /cache/dns.log
-        # verbosity: 3
-
-forward-zone:
-        name: "."
-        forward-addr: 8.8.8.8  # IP of the preferred upstream resolver
-
-
-
-
-If something is going wrong, check the config file
-unbound-checkconf /var/unbound/etc/unbound.conf 
-unbound-checkconf: no errors in /var/unbound/etc/unbound.conf
-
-- chown _unbound:unbound /var/unbound/etc/unbound.conf
-- rcctl enable unbound
-- rcctl start unbound
-
-
-
-
-
-
-
-
-
-Enable the Firewall service
-root@puff ~# rcctl enable pf
-
+The main features it configures for you are:
+- PF firewall
+- NAT
+- External PPPoE connection
+- Internal DHCP server for local devices
+- DNS resolver hosted locally with unbound
+- A bunch of local devices defined with static IPs using DHCP and unbound 
+- NTP server that uses a USB attached GPS dongle to get precise time and server it locally and externally 

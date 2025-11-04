@@ -5,3 +5,5 @@
     sleep 60
     /usr/sbin/rcctl restart ntpd
 ) &
+
+# EOF

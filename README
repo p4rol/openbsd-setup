@@ -4,7 +4,6 @@ You run it by running setup.sh
 
 setup.sh will download the rest of the files that it needs to complete the install
 
-I'm tempted to turn it all into a single file with here scripts. Let's see if there is time for that. 
 
 The main features it configures for you are:
 - PF firewall
@@ -14,3 +13,8 @@ The main features it configures for you are:
 - DNS resolver hosted locally with unbound
 - A bunch of local devices defined with static IPs using DHCP and unbound 
 - NTP server that uses a USB attached GPS dongle to get precise time and server it locally and externally 
+
+
+Outline for further developments:
+- Convert the whole thing into a single file with here scripts, so you can paste it into a terminal (that might be easier)
+- Make the script interactive, so it asks you what interfaces that you want to use...

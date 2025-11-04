@@ -12,3 +12,5 @@
 logger "Attempting to reboot the host"
 
 reboot
+
+# EOF

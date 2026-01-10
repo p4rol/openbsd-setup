@@ -49,10 +49,13 @@ check_pppoe_credentials() {
 
 add_ldattach_to_ttys() {
     local FILE=/etc/ttys
+
+    # This assumes that the GPS dongle is giving out PPS on the DCD pin:
     local LINE1='cuaU0   "/sbin/ldattach  -h -s 38400 -t !dcd nmea"   unknown on softcar'
 
     # Only uncomment this if you REALLY want two usb attached GPS devices, it's not adviseable
-    # for accuracy reasons. Better to have a single GPS timing device on your USB bus
+    # for accuracy reasons (OpenNTPD will average between them, so if one is massively out of
+    # sync... Better to have a single GPS timing device on your USB bus
     # local LINE2='cuaU1   "/sbin/ldattach nmea"   unknown on softcar'
 
     # Process cuaU0

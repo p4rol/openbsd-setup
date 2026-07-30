@@ -161,6 +161,10 @@ check_success "rcctl enable unbound"
 rcctl enable ntpd
 check_success "rcctl enable ntpd"
 
+# Enable the sensorsd service
+rcctl enable sensorsd
+check_success "rcctl enable sensorsd"
+
 # Enable the apmd service 
 rcctl enable apmd
 check_success "rcctl enable apmd"
@@ -194,7 +198,7 @@ check_success "Added cron job for ping_watchdog.sh"
 
 echo "All steps completed successfully."
 
-echo "Reboot and test!"
+echo "You should now REBOOT and TEST!"
 
 
 # EOF

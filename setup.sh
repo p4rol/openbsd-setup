@@ -134,6 +134,9 @@ check_success "cp rc.local /etc/rc.local"
 cp gps_alert.sh /usr/local/bin/
 check_success "cp gps_alert.sh /usr/local/bin/"
 
+cp sensorsd.conf /etc/
+check_success "cp sensorsd.conf /etc/"
+
 # Call the function to add ldattach line to /etc/ttys
 add_ldattach_to_ttys
 

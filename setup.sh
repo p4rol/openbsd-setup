@@ -137,6 +137,9 @@ check_success "cp gps_alert.sh /usr/local/bin/"
 cp sensorsd.conf /etc/
 check_success "cp sensorsd.conf /etc/"
 
+cp ifstated.conf /etc/
+check_success "cp ifstated.conf /etc/"
+
 # Call the function to add ldattach line to /etc/ttys
 add_ldattach_to_ttys
 
@@ -171,6 +174,10 @@ check_success "rcctl enable sensorsd"
 # Enable the apmd service 
 rcctl enable apmd
 check_success "rcctl enable apmd"
+
+# Enable the ifstated service 
+rcctl enable ifstated
+check_success "rcctl enable ifstated"
 
 # Append apmd settings to the /etc/rc.conf.local configuration file
 echo 'apmd_flags="-L" ' >> /etc/rc.conf.local

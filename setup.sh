@@ -104,6 +104,9 @@ check_success "cp hostname.pppoe0 to /etc/"
 cp hostname.em0 /etc/
 check_success "cp hostname.em0 to /etc/"
 
+cp hostname.axen0 /etc/
+check_success "cp hostname.axen0 to /etc/"
+
 cp dhcpd.conf /etc/
 check_success "cp dhcpd.conf to /etc/"
 

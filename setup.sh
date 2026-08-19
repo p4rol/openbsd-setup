@@ -143,6 +143,9 @@ check_success "cp sensorsd.conf /etc/"
 cp ifstated.conf /etc/
 check_success "cp ifstated.conf /etc/"
 
+cp ifstated-probe.sh /etc/
+check_success "cp ifstated-probe.sh /etc/"
+
 # Call the function to add ldattach line to /etc/ttys
 add_ldattach_to_ttys
 

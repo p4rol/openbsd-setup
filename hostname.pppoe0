@@ -8,8 +8,6 @@ dest 0.0.0.1
 !/sbin/route add -priority 4 default -ifp pppoe0 0.0.0.1
 
 # Pin health-check targets strictly to pppoe0
-!/sbin/route add 1.1.1.1 -ifp pppoe0 0.0.0.1
 !/sbin/route add 8.8.8.8 -ifp pppoe0 0.0.0.1
-
 
 # EOF

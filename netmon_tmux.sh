@@ -1,72 +1,61 @@
 #!/bin/sh
-# netmon_tmux.sh — create a tmux window running root-only tools
-# Show the packet rate of the ntpd service, the sensors/queues output, the current stratum level
-# and the CPU utilisation 
+# netmon_tmux.sh — create a 4-quadrant layout with custom top-right sizing
 
 set -eu
 
 WIN_NAME="netmon"
 
-# If not root, re-exec this script once via su to do everything as root.
+# 1. Ensure root execution
 if [ "$(id -u)" -ne 0 ]; then
-  # Resolve the absolute path before switching users
   SCRIPT="$(realpath "$0")"
   exec su - root -c "sh $SCRIPT"
 fi
 
-# Create a window in the current tmux session if inside tmux; otherwise a new session.
-if [ -n "${TMUX-}" ]; then
-  WIN_ID="$(tmux new-window -P -F '#{window_id}' -n "$WIN_NAME")"
-else
-  tmux new-session -d -s "$WIN_NAME" -n "$WIN_NAME"
-  WIN_ID="$(tmux display-message -p -t "${WIN_NAME}:0" '#{window_id}')"
-fi
+# 2. Get current terminal dimensions so tmux doesn't default to 80x24
+COLS="$(tput cols 2>/dev/null || echo 160)"
+LINES="$(tput lines 2>/dev/null || echo 50)"
 
-tmux select-window -t "$WIN_ID"
+# 3. Kill previous session completely
+tmux kill-session -t "$WIN_NAME" 2>/dev/null || true
 
-# 1. Get initial top-left pane
-P_TL="$(tmux display-message -p -t "$WIN_ID" '#{pane_id}')"
+# 4. Create session at real terminal dimensions
+P_TOP_LEFT="$(tmux new-session -d -s "$WIN_NAME" -n "$WIN_NAME" -x "$COLS" -y "$LINES" -P -F '#{pane_id}')"
 
-# 2. Split left/right (50/50 width)
-P_TR="$(tmux split-window -h -P -F '#{pane_id}' -t "$P_TL")"
+# -------------------------------------------------------------
+# 5. Build 2x2 base quadrants (exact 50% width and height)
 
-# 3. Split left side vertically -> bottom-left
-P_BL="$(tmux split-window -v -P -F '#{pane_id}' -t "$P_TL")"
+# Split Left / Right (50% width)
+P_TOP_RIGHT="$(tmux split-window -d -h -p 50 -P -F '#{pane_id}' -t "$P_TOP_LEFT")"
 
-# 4. Split right side vertically -> bottom-right
-P_BR="$(tmux split-window -v -P -F '#{pane_id}' -t "$P_TR")"
+# Split Left column (50% height) -> Top-Left & Bottom-Left
+P_BOT_LEFT="$(tmux split-window -d -v -p 50 -P -F '#{pane_id}' -t "$P_TOP_LEFT")"
 
-# 5. Split top-right vertically -> lower top-right pane
-P_TR_BOT="$(tmux split-window -v -P -F '#{pane_id}' -t "$P_TR")"
+# Split Right column (50% height) -> Top-Right & Bottom-Right
+P_BOT_RIGHT="$(tmux split-window -d -v -p 50 -P -F '#{pane_id}' -t "$P_TOP_RIGHT")"
 
-# Send commands to each pane
-# Top-left: pf_top
-tmux send-keys -t "$P_TL" "/root/dev/pf_top" C-m
+# 6. Split Top-Right for queues:
+# -l 9 gives systat queues 9 lines (perfect for your 4 queues) and leaves the rest for top.
+# Change "-l 9" to "-p 50" if you prefer an exact 50/50 split of the quadrant instead.
+P_MID_RIGHT="$(tmux split-window -d -v -l 9 -P -F '#{pane_id}' -t "$P_TOP_RIGHT")"
+# -------------------------------------------------------------
 
-# Bottom-left: ntpctl loop
-tmux send-keys -t "$P_BL" "sh -lc 'watch ntpctl -s all'" C-m
+# Send commands
+tmux send-keys -t "$P_TOP_LEFT"  "/root/dev/pf_top" C-m
+tmux send-keys -t "$P_BOT_LEFT"  "sh -lc 'watch ntpctl -s all'" C-m
+tmux send-keys -t "$P_TOP_RIGHT" "top -C -s 1 -g ntpd" C-m
+tmux send-keys -t "$P_MID_RIGHT" "systat -s 1 queues" C-m
+tmux send-keys -t "$P_BOT_RIGHT" "systat -s 1 sensors" C-m
 
-# Top-right (upper): top
-tmux send-keys -t "$P_TR" "top -C -s 1 -g ntpd" C-m
+# Set titles
+tmux select-pane -t "$P_TOP_LEFT"  -T "netmon"
+tmux select-pane -t "$P_BOT_LEFT"  -T "ntpctl loop"
+tmux select-pane -t "$P_TOP_RIGHT" -T "top"
+tmux select-pane -t "$P_MID_RIGHT" -T "systat queues"
+tmux select-pane -t "$P_BOT_RIGHT" -T "systat sensors"
 
-# Top-right (lower): systat queues
-tmux send-keys -t "$P_TR_BOT" "systat -s 1 queues" C-m
-
-# Bottom-right: systat sensors
-tmux send-keys -t "$P_BR" "systat -s 1 sensors" C-m
-
-# Set pane titles
-tmux select-pane -t "$P_TL"     -T "netmon"
-tmux select-pane -t "$P_BL"     -T "ntpctl loop"
-tmux select-pane -t "$P_TR"     -T "top"
-tmux select-pane -t "$P_TR_BOT" -T "systat queues"
-tmux select-pane -t "$P_BR"     -T "systat sensors"
-
-# Attach if we created a new session; otherwise focus the window.
+# Attach to session
 if [ -z "${TMUX-}" ]; then
-  exec tmux attach -t "$WIN_NAME"
+  exec tmux attach-session -t "$WIN_NAME"
 else
-  tmux select-window -t "$WIN_ID"
+  exec tmux switch-client -t "$WIN_NAME" 2>/dev/null || exec tmux attach-session -t "$WIN_NAME"
 fi
-
-# EOF comment

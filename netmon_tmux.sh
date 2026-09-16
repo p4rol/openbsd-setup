@@ -42,7 +42,7 @@ tmux send-keys -t "$WIN_ID".0 "/root/dev/pf_top" C-m
 tmux send-keys -t "$WIN_ID".1 "top -C -s 1 -g ntp" C-m
 
 # Bottom-left: clear each second then ntpctl -s all
-tmux send-keys -t "$WIN_ID".2 "sh -lc 'while :; do clear; ntpctl -s all; sleep 1; done'" C-m
+tmux send-keys -t "$WIN_ID".2 "sh -lc 'watch ntpctl -s all'" C-m
 
 # Bottom-right: systat -s 1 sensors
 tmux send-keys -t "$WIN_ID".3 "systat -s 1 sensors" C-m

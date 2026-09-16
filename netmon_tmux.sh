@@ -47,7 +47,7 @@ tmux send-keys -t "$P_TL" "/root/dev/pf_top" C-m
 tmux send-keys -t "$P_BL" "sh -lc 'watch ntpctl -s all'" C-m
 
 # Top-right (upper): top
-tmux send-keys -t "$P_TR" "top -C -s 1 -g ntp" C-m
+tmux send-keys -t "$P_TR" "top -C -s 1 -g ntpd" C-m
 
 # Top-right (lower): systat queues
 tmux send-keys -t "$P_TR_BOT" "systat -s 1 queues" C-m
